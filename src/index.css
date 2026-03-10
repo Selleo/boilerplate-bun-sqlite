@@ -2,13 +2,16 @@
 
 @layer base {
   :root {
-    @apply text-slate-800 bg-slate-50 font-sans;
-    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    @apply text-slate-800 bg-slate-50;
+    --text-main: #20212a;
+    font-family: "Manrope", "Segoe UI", sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
   body {
-    @apply min-w-[320px] min-h-screen m-0;
+    @apply m-0 min-h-screen min-w-[320px];
+    background: #dcdde3;
+    color: var(--text-main);
   }
 }
 
