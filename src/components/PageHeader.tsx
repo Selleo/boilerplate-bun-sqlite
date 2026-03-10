@@ -1,43 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ChevronDown, CircleUserRound, LogOut } from "lucide-react";
-import { authClient } from "../auth-client";
+import { useAuth } from "../auth-context";
 import { SearchInput } from "./SearchInput";
 
 export function PageHeader({ title }: { title: string }) {
+  const { user, logout } = useAuth();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [logoutPending, setLogoutPending] = useState(false);
-  const [userImage, setUserImage] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    void fetch("/api/me")
-      .then(async (response) => {
-        if (!response.ok) return null;
-        return (await response.json()) as { user?: { image?: string | null } };
-      })
-      .then((payload) => {
-        if (cancelled) return;
-        setUserImage(payload?.user?.image ?? null);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setUserImage(null);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   const handleLogout = async () => {
     if (logoutPending) return;
     setLogoutPending(true);
-    try {
-      await authClient.signOut();
-    } finally {
-      window.location.assign("/login");
-    }
+    await logout();
+    window.location.assign("/login");
   };
 
   return (
@@ -53,12 +28,11 @@ export function PageHeader({ title }: { title: string }) {
             onClick={() => setUserMenuOpen((current) => !current)}
             className="flex h-9 items-center gap-2 rounded-xl border border-[#dfe5f0] border-b-2 border-b-[#dfe5f0] bg-white px-2 text-[#97a0b3]"
           >
-            {userImage ? (
+            {user?.image ? (
               <img
-                src={userImage}
+                src={user.image}
                 alt="User avatar"
                 className="h-6 w-6 rounded-full object-cover"
-                onError={() => setUserImage(null)}
               />
             ) : (
               <span className="h-6 w-6 rounded-full bg-[linear-gradient(130deg,#d2ac8c,#8e6138)]" />

@@ -1,12 +1,26 @@
+import { useState } from "react";
 import { authClient } from "../auth-client";
 import logo from "../assets/logo.png";
 
 export function LoginPage() {
+  const [loginPending, setLoginPending] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+
   const signInWithGoogle = async () => {
-    await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/",
-    });
+    if (loginPending) return;
+    setLoginPending(true);
+    setLoginError(null);
+
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/",
+      });
+    } catch {
+      setLoginError("Google sign-in failed. Check OAuth configuration and try again.");
+    } finally {
+      setLoginPending(false);
+    }
   };
 
   return (
@@ -23,13 +37,19 @@ export function LoginPage() {
           Sign in
         </h1>
         <p className="mt-2 text-[14px] text-[#7b8195]">Sign in with your Google account.</p>
+        {loginError ? (
+          <p className="mt-3 rounded-xl border border-[#f0c9c9] bg-[#fff4f4] px-3 py-2 text-[13px] text-[#a05252]">
+            {loginError}
+          </p>
+        ) : null}
 
         <button
           type="button"
           className="mt-6 h-10 w-full rounded-xl bg-[#242733] text-[14px] font-medium text-white hover:bg-[#1e212c]"
+          disabled={loginPending}
           onClick={() => void signInWithGoogle()}
         >
-          Continue with Google
+          {loginPending ? "Connecting..." : "Continue with Google"}
         </button>
       </section>
     </div>
