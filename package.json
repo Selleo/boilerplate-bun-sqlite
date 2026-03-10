@@ -1,0 +1,31 @@
+{
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --hot src/index.ts",
+    "start": "NODE_ENV=production bun src/index.ts",
+    "build": "bun run build.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^3.0.29",
+    "ai": "^6.0.86",
+    "better-auth": "^1.4.18",
+    "better-sqlite3": "^12.6.2",
+    "bun-plugin-tailwind": "^0.1.2",
+    "kysely": "^0.28.11",
+    "kysely-bun-sqlite": "^0.4.0",
+    "lucide-react": "^0.563.0",
+    "react": "^19",
+    "react-dom": "^19",
+    "react-router-dom": "^7.13.0",
+    "tailwindcss": "^4.1.11",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/react": "^19",
+    "@types/react-dom": "^19"
+  }
+}
